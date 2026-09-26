@@ -1,70 +1,81 @@
 # 02. Sổ Quy Tắc Gắn Nhãn: Đèn Tín Hiệu Chủ Đạo Điều Khiển Làn Xe Mình
-Version: v1
+Version: v2
 
 ## 1. Mục tiêu bài toán
 Xác định và khoanh khung các đầu đèn tín hiệu giao thông đường bộ, phân loại rõ đầu đèn nào là đèn chủ đạo đang điều khiển trực tiếp hướng di chuyển của làn xe hiện tại (Ego-Vehicle Primary Traffic Light), phục vụ hệ thống xe tự hành ra quyết định dừng hay đi.
 
-## 2. Đối tượng cần vẽ và không được vẽ
+## 2. Chế độ vẽ và phạm vi đối tượng
+- **Chế độ vẽ trên CVAT:** Bắt buộc chọn chế độ **Shape** (vẽ độc lập trên từng frame ảnh tĩnh). **TUYỆT ĐỐI KHÔNG** dùng chế độ **Track**.
 - **PHẢI VẼ:**
-  - Mọi hộp đèn tín hiệu giao thông đường bộ dành cho xe cơ giới (đèn 3 màu tròn, đèn mũi tên) quay mặt trực diện hoặc hơi chếch về phía xe mình.
+  - Mọi hộp đèn tín hiệu giao thông đường bộ dành cho xe cơ giới (đèn tròn, đèn mũi tên) quay mặt trực diện hoặc hơi chếch về phía xe mình.
 - **KHÔNG ĐƯỢC VẼ:**
-  - Đèn tín hiệu dành riêng cho người đi bộ (có biểu tượng hình người) hoặc đèn dành riêng cho xe đạp.
-  - Hộp đèn quay lưng lại hoàn toàn (mặt sau của đèn chiều giao cắt).
-  - Bóng đèn đường chiếu sáng, đốm sáng phản quang hoặc bóng đèn led trang trí đô thị.
-  - Hộp đèn ở quá xa hoặc quá mờ với chiều cao nhỏ hơn 10 pixels.
+  - Đèn tín hiệu dành cho người đi bộ (có hình người), đèn dành cho xe đạp.
+  - Mặt sau của hộp đèn (đèn chiều giao cắt quay lưng lại).
+  - Đèn hậu, đèn phanh màu đỏ của các xe ô tô đi phía trước (đặc biệt trong đêm tối hoặc chụp từ xa).
+  - Bóng đèn đường chiếu sáng, đốm sáng phản quang hoặc đèn led trang trí đô thị.
+  - Hộp đèn ở quá xa hoặc quá mờ với chiều cao nhỏ hơn 10 pixels trên ảnh gốc.
 
 ## 3. Kỹ thuật dựng hình (Geometry)
 - **Công cụ:** Sử dụng duy nhất Bounding Box (khung hình chữ nhật - Rectangle).
-- **Ranh giới:** Khung phải vẽ ôm sát mép ngoài của **vỏ hộp đèn** (housing).
-- **Tuyệt đối không khoanh:** Cột đỡ kim loại, cần vươn ngang, dây cáp treo hoặc bảng biển báo phụ gắn bên cạnh.
-- **Chóa chắn nắng (Visor/Hood):** Chỉ lấy sát mép viền chóa nhô ra của hộp đèn, không kéo rộng khung sang vùng trời hay nền xung quanh.
-- **Cụm nhiều hộp đèn:** Nếu trên cùng một cột có 2 hay nhiều hộp đèn tách rời (ví dụ: 1 hộp đèn đi thẳng, 1 hộp đèn mũi tên rẽ riêng), phải vẽ từng Bounding Box riêng biệt cho từng hộp đèn. Không vẽ gộp chung 1 khung to.
+- **Ranh giới hộp đèn (Visible Boundary):**
+  - Khung chữ nhật chỉ vẽ bao quanh **phần vỏ hộp đèn thực tế nhìn thấy được bằng mắt thường**.
+  - **Mũ che nắng / Chao chắn nắng (Visor):** Là phần mi sắt/nhựa nhô ra phía trên mỗi mắt đèn để che ánh mặt trời. Chỉ ôm sát phần mũ này, **không** kéo khung tràn rộng ra nền trời trống xung quanh.
+  - **Tuyệt đối không khoanh:** Cột kim loại thẳng đứng, thanh xà ngang vươn ra đường, dây cáp treo hoặc bảng biển báo phụ gắn bên cạnh.
+- **Cụm nhiều hộp đèn:** Trên cùng một giá treo có 2 hoặc nhiều hộp đèn tách rời (ví dụ: hộp đèn rẽ trái riêng, hộp đèn đi thẳng riêng), **phải vẽ từng Bounding Box riêng biệt cho từng hộp đèn**. Không vẽ gộp chung 1 khung to.
 
 ## 4. Danh mục nhãn và thuộc tính (Label & Attributes)
 Tất cả đối tượng đều dùng chung nhãn: `traffic_light`.
 
 ### 4.1. Thuộc tính `relevance` (Bắt buộc chọn)
-- `ego_primary`: Đèn treo trực tiếp trên làn xe đang đi hoặc ở cột bên phải ngay phía trước giao lộ, có hiệu lực điều khiển trực tiếp hướng đi của xe mình.
-- `other_direction`: Đèn dành cho làn rẽ nhánh khác (khi xe mình ở làn đi thẳng), đèn của chiều xe ngược lại, hoặc đèn của tuyến đường cắt ngang ngã tư.
-- `ambiguous`: Trường hợp giao lộ quá phức tạp, góc chụp lệch khó xác định làn đường, hoặc vị trí đèn nằm lơ lửng không thể khẳng định chắc chắn áp dụng cho làn nào.
+- `ego_primary`: Đèn điều khiển trực tiếp hướng đi của xe mình. Căn cứ vào vị trí làn xe đang chạy:
+  - Nếu xe đang ở làn đi thẳng: Đèn tròn hoặc mũi tên đi thẳng nằm ngay trước mặt/phía trên làn là `ego_primary`.
+  - Quy tắc phân xử góc chụp lệch: Nếu trên giá treo có 3 đầu đèn (Trái - Đi thẳng - Phải) mà góc camera bị lệch làn hoặc đang tiến vào tâm giao lộ, chỉ chọn `ego_primary` cho đầu đèn thẳng hàng nhất với quỹ đạo di chuyển hiện tại của xe.
+- `other_direction`: Đèn của làn rẽ nhánh độc lập (khi xe không đi vào làn đó), đèn của chiều ngược lại, hoặc đèn của đường cắt ngang.
+- `ambiguous`: Trường hợp giao lộ quá phức tạp, góc chụp xiên khiến không thể phân định xe đang thuộc quyền điều khiển của đầu đèn nào, hoặc xe đang ở giữa hai vạch phân làn chưa rõ ý định rẽ.
 
-### 4.2. Thuộc tính `state` (Bắt buộc chọn)
-- `red`: Đèn đang sáng tín hiệu đỏ (đèn tròn đỏ hoặc mũi tên đỏ).
-- `yellow`: Đèn đang sáng tín hiệu vàng (hoặc đèn vàng nhấp nháy).
-- `green`: Đèn đang sáng tín hiệu xanh (đèn tròn xanh hoặc mũi tên xanh).
-- `off`: Hộp đèn đang tắt hoàn toàn, không có mắt đèn nào phát sáng.
-- `unknown`: Ánh sáng mặt trời chiếu chói lóa (sun glare), ngược sáng, hoặc ban đêm quá tối/mờ không thể nhận biết chính xác màu nào đang sáng.
+### 4.2. Thuộc tính `state` (Tách riêng đèn tròn và đèn mũi tên)
+- `circle_red`: Đèn tròn sáng đỏ.
+- `circle_yellow`: Đèn tròn sáng vàng hoặc nhấp nháy vàng.
+- `circle_green`: Đèn tròn sáng xanh.
+- `arrow_straight`: Đèn hiển thị mũi tên chỉ hướng đi thẳng.
+- `arrow_left`: Đèn hiển thị mũi tên rẽ trái.
+- `arrow_right`: Đèn hiển thị mũi tên rẽ phải.
+- `arrow_u_turn`: Đèn hiển thị mũi tên quay đầu xe.
+- `off`: Hộp đèn tối hoàn toàn, không có mắt đèn nào phát sáng.
+- `unknown`: Bị chói lóa nắng (sun glare), ngược sáng trắng, hoặc quá mờ không thể khẳng định chắc chắn hình dạng/màu sắc tín hiệu.
+*(Lưu ý về Đỏ nhấp nháy - Flashing Red: Chọn `circle_red` vì hiệu lệnh thực tế của hệ thống xe tự hành vẫn là dừng lại quan sát an toàn trước khi di chuyển).*
 
-### 4.3. Thuộc tính `occluded` (Bị che khuất)
-- `false` (Mặc định): Nhìn thấy trọn vẹn toàn bộ vỏ hộp đèn.
-- `true`: Hộp đèn bị che khuất một phần bởi cành cây, biển báo, dây điện hoặc thân xe khác.
+### 4.3. Thuộc tính `truncated` và `occluded`
+- `truncated`: Checkbox. Tick chọn `true` khi hộp đèn nằm sát mép khung hình và bị đường viền ảnh cắt cụt một phần.
+- `occluded`: Tận dụng phím tắt **Q** của CVAT. Bấm `Q` để bật cờ `occluded = true` khi hộp đèn bị vật cản (cành cây, cột khác, biển báo) che mất một phần.
 
-## 5. Quy tắc xử lý bị che khuất (Occlusion)
-- Nếu hộp đèn bị che khuất một phần nhưng vẫn quan sát được ít nhất một mắt đèn đang phát sáng: Vẫn vẽ Bounding Box ước lượng bao trọn toàn bộ kích thước của hộp đèn đó và đánh dấu tích `occluded = true`.
-- Nếu hộp đèn bị vật cản che khuất trên 80% diện tích và không thể xác định được trạng thái sáng: Bỏ qua hoàn toàn, không vẽ.
+## 5. Quy tắc xử lý bị che khuất và trùng màu nền (Occlusion & Contrast)
+- **Quy tắc khung nhìn thấy (Visible Crop):** Không tự ước lượng kích thước phần bị che khuất. **Chỉ vẽ Bounding Box vừa khít phần vỏ hộp đèn nhìn thấy được bằng mắt thường** và bấm phím **Q** (`occluded = true`).
+- Nếu hộp đèn bị vật cản che khuất trên 80% diện tích hoặc không còn nhìn thấy tín hiệu đèn sáng: **Bỏ qua hoàn toàn, không vẽ**.
+- **Màu thân đèn trùng màu bóng cây:** Khi vỏ hộp đèn màu đen/xám chìm vào tán cây tối màu phía sau, lấy ranh giới dựa trên vùng phát quang của bóng đèn cộng với khoảng cách ước lệ tối thiểu của chao đèn nhìn thấy được. Nếu không thể xác định được mép ngoài của vỏ đèn: Bỏ qua hoặc chỉ khoanh sát vùng chao đèn phát sáng.
 
 ## 6. Quy tắc kích thước và khoảng cách (Scale & Distance)
 - **Ngưỡng tối thiểu:** Chiều cao của hộp đèn phải đạt tối thiểu từ **10 pixels** trở lên trên ảnh gốc.
-- Đối với các đầu đèn nằm ở cuối ngã tư, quá xa chỉ thấy một đốm sáng nhòe không phân biệt được hình dáng vỏ hộp đèn: Bỏ qua hoàn toàn, không vẽ.
+- Đèn ở quá xa chỉ xuất hiện dưới dạng một đốm sáng nhòe (không nhận diện được hình khối vỏ hộp đèn): **Bỏ qua hoàn toàn, không vẽ**.
 
 ## 7. Quy tắc khi không chắc chắn (Uncertainty Handling)
-- Tuyệt đối không đoán mò theo cảm tính.
-- Nếu chắc chắn là đèn giao thông nhưng không rõ phân làn: Chọn `relevance = ambiguous`.
-- Nếu chắc chắn là đèn nhưng không phân biệt được màu sắc đang bật: Chọn `state = unknown`.
-- Nếu nhìn một đốm sáng mà không chắc đó là đèn giao thông hay biển phản quang / đèn trang trí: Bỏ qua hoàn toàn, không vẽ.
+- Tuyệt đối không suy đoán theo cảm tính.
+- Nếu xác định được là đèn giao thông nhưng không rõ phân làn: Chọn `relevance = ambiguous`.
+- Nếu chắc chắn là đèn nhưng bị lóa hoặc mất màu: Chọn `state = unknown`.
+- Đốm đỏ ở tầm thấp ngang mặt đường nghi ngờ giữa đèn hậu xe ô tô và đèn giao thông: Nếu không có cấu trúc vỏ hộp chữ nhật hoặc cột treo -> Coi là đèn xe và **bỏ qua không vẽ**.
 
 ## 8. Quy tắc liên kết / Ngữ cảnh thời gian
-- Bài toán này thực hiện trên tập ảnh tĩnh độc lập.
-- Không áp dụng quy tắc theo dõi đối tượng theo thời gian (Tracking ID / Interpolation).
+- Bài toán này thực hiện trên tập ảnh tĩnh độc lập theo từng frame.
+- Không áp dụng quy tắc theo dõi đối tượng theo thời gian (Tracking ID / Interpolation / Keyframe).
 
-## 9. Tiêu chuẩn đánh giá chất lượng (Quality Standards)
-- Khung vẽ phải ôm khít tối đa vỏ hộp đèn (sai lệch tọa độ không quá 2 pixels ở các mép viền).
-- Không được bỏ sót đèn đỏ điều khiển làn xe mình (`relevance = ego_primary`, `state = red`) — đây là lỗi nghiêm trọng (Critical).
-- Không được nhầm lẫn giữa đèn xe cơ giới và đèn tín hiệu người đi bộ.
+## 9. Ảnh mẫu minh họa quy tắc (Example References)
+- **LISA01:** Minh họa cụm đèn trên cần vươn ngang ngã tư. Đèn mũi tên đỏ rẽ trái bên cạnh biển phụ là `other_direction` (`state = arrow_left`). Đèn tròn đỏ ở giữa làn đường đi thẳng là `ego_primary` (`state = circle_red`). Đèn tròn đỏ phía xa bên phải là `other_direction`.
+- **LISA02:** Minh họa trường hợp đèn bị cành cây/tán cọ che khuất một phần. Chỉ khoanh phần vỏ nhìn thấy, bấm phím `Q` (`occluded = true`).
+- **LISA03:** Minh họa góc chụp camera lệch làn. Phân định `ego_primary` cho đèn thẳng hướng bánh xe di chuyển.
 
 ## 10. Checklist kiểm tra nhanh trước khi nộp bài
-1. Đã kiểm tra không còn bounding box nào để giá trị thuộc tính là `__undefined__` chưa?
-2. Có khoanh nhầm cột đèn hay thanh đỡ kim loại không?
-3. Đã loại trừ hết các đèn dành cho người đi bộ ở góc vỉa hè chưa?
-4. Đèn đỏ trực tiếp của xe mình đã được gán đúng `ego_primary` chưa?
-5. Các hộp đèn bị cành cây/biển báo che khuất đã được tick `occluded = true` chưa?
+1. Tất cả đối tượng đã được vẽ ở chế độ **Shape**, không có đối tượng nào ở chế độ **Track** chưa?
+2. Đã kiểm tra không còn bounding box nào để giá trị thuộc tính là `__undefined__` chưa?
+3. Có vẽ nhầm vào đèn hậu xe hơi hoặc biển báo treo cạnh đèn không?
+4. Đèn rẽ trái độc lập đã được tách riêng box và gán đúng `arrow_left` + `other_direction` chưa?
+5. Khung vẽ đã ôm sát mép nhìn thấy (Visible Crop) thay vì tự ước lượng kích thước phần bị che chưa?
