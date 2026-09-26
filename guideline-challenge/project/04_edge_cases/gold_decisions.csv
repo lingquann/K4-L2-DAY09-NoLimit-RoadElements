@@ -1,1 +1,11 @@
 sample_id,decision_id,expected,severity,rationale
+LISA06,D01,"traffic_light [relevance=ego_primary;state=circle_red]",critical,"Đèn giữa trên giá vươn ngã tư sáng đỏ, trực diện làn xe mình -> Bắt buộc khoanh box ego_primary + circle_red để xe dừng an toàn"
+LISA06,D02,"geometry:Visible crop ôm sát phần vỏ + visor nhô ra (lệch <= 2px)",minor,"Yêu cầu chuẩn geometry theo mục 3 Sổ quy tắc v2/v3"
+LISA13,D03,"traffic_light [relevance=ego_primary;state=circle_red]",critical,"Pha đỏ ảnh LISA13: Đèn chính giữa vươn ngang phải được gán ego_primary và circle_red"
+LISA13,D04,"Không khoanh đốm sáng tầm thấp y > 430",major,"Đốm sáng tầm thấp không có cấu trúc vỏ hộp chữ nhật hoặc cột treo là đèn phanh/đèn hậu xe ô tô -> Bỏ qua không vẽ theo mục 7"
+LISA24,D05,"traffic_light [relevance=other_direction;state=arrow_left]",critical,"Mũi tên rẽ trái sáng đỏ bên cạnh đèn đi thẳng xanh -> Phải gán other_direction để tránh gây phanh gấp nhầm cho xe đi thẳng"
+LISA24,D06,"traffic_light [relevance=ego_primary;state=circle_green]",critical,"Đầu đèn giữa đi thẳng sáng xanh -> Gán ego_primary và circle_green (đảm bảo đúng 1 box ego_primary)"
+LISA27,D07,"traffic_light [relevance=other_direction;state=circle_green]",major,"Cụm đèn xa cao >= 10px -> Vẽ từng box riêng biệt, gán other_direction"
+LISA27,D08,"geometry:Tách riêng từng Bounding Box cho các hộp đèn nhỏ phía xa",minor,"Mục 3: Không gộp cụm 2-3 hộp đèn vào 1 box to"
+LISA30,D09,"traffic_light [relevance=ambiguous;state=unknown;occluded=true]",major,"Đèn nhỏ phía xa bị che khuất một phần và chói sáng -> Gán ambiguous + unknown + nhấn Q occluded"
+LISA30,D10,"geometry:Box visible crop ôm sát phần vỏ nhìn thấy thực tế (cao ~18px)",minor,"Mục 5: Chỉ khoanh vùng nhìn thấy thực tế, không amodal ước lượng phần bị che"
