@@ -1,8 +1,8 @@
 # Team
 
 - **Team:** `NoLimit`
-- **Nhóm peer test bài của mình:** TODO (Lab Coach công bố cặp A ↔ B)
-- **Nhóm mình test bài của:** TODO (Lab Coach công bố)
+- **Nhóm peer test bài của mình:** Traffic
+- **Nhóm mình test bài của:** Traffic
 - **Problem family:** Traffic light (state, relevance, direction) — xác định đèn tín hiệu chủ đạo điều khiển hướng di chuyển của xe mình (`ego_primary`) tại giao lộ nhiều đầu đèn
 - **Nguồn ảnh:** `lisa` (30 frame liên tiếp `dayClip5`, LISA01–LISA30)
 

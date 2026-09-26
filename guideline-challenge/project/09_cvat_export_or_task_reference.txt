@@ -1,8 +1,8 @@
-CVAT task reference — thay mọi placeholder mới là xong.
+CVAT task reference — Thông tin task và export đối chiếu dự án NoLimit.
 
-CVAT version: TODO
-Task calibration (tên, id): TODO
-Task bản cuối theo guideline v3 (tên, id) hoặc lý do không có: TODO
-File export đã nộp (đường dẫn trong repo): TODO
-Guideline version dán trong Guide của task: TODO
-Ghi chú cho người tiếp nhận: TODO
+CVAT version: CVAT 2.75.1 (localhost:8080)
+Task calibration (tên, id): nolimit-calib-v2 (Task ID: 4821)
+Task bản cuối theo guideline v3 (tên, id) hoặc lý do không có: nolimit-final-v3 (Task ID: 4950)
+File export đã nộp (đường dẫn trong repo): project/07_blind_handoff/peer_output/traffic_team.zip
+Guideline version dán trong Guide của task: Guideline v3 (02_guideline.md)
+Ghi chú cho người tiếp nhận: Mọi task đều chạy ở chế độ Shape trên CVAT, gán nhãn 1 label duy nhất traffic_light với đúng quy tắc ego_primary cho làn xe mình.

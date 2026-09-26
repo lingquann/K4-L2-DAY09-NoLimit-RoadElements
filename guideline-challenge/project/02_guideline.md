@@ -1,5 +1,5 @@
 # 02. Sổ Quy Tắc Gắn Nhãn: Đèn Tín Hiệu Chủ Đạo Điều Khiển Làn Xe Mình
-Version: v2
+Version: v3
 
 ## 1. Mục tiêu bài toán
 Xác định và khoanh khung các đầu đèn tín hiệu giao thông đường bộ, phân loại rõ đầu đèn nào là đèn chủ đạo đang điều khiển trực tiếp hướng di chuyển của làn xe hiện tại (Ego-Vehicle Primary Traffic Light), phục vụ hệ thống xe tự hành ra quyết định dừng hay đi.
@@ -84,6 +84,7 @@ Tất cả đối tượng đều dùng chung nhãn: `traffic_light`.
   - Đầu đèn tròn đỏ ở trụ thấp bên phải: Gán `ego_secondary` (`state = circle_red`) nếu cùng pha hỗ trợ cho hướng đi thẳng, hoặc gán `other_direction` nếu thuộc lối rẽ nhánh độc lập.
 - **LISA02:** Minh họa trường hợp đèn bị cành cây/tán cọ che khuất một phần. Chỉ khoanh phần vỏ nhìn thấy, bấm phím **Q** (`occluded = true`).
 - **LISA03:** Minh họa góc chụp camera lệch làn. Phân định các đèn thẳng hướng di chuyển hiện tại là `ego_primary`.
+- **LISA24 (Rút kinh nghiệm v3):** Minh họa pha xanh với tín hiệu xung đột: Mũi tên rẽ trái màu đỏ bên cạnh đầu đèn đi thẳng màu xanh. Bắt buộc gán mũi tên rẽ trái là `other_direction` (`state = arrow_left`) và gán đúng 1 đầu đèn giữa đi thẳng là `ego_primary` (`state = circle_green`). Khi đèn bị che lóa mờ không đủ điểm ảnh nhận diện màu, bắt buộc chọn `relevance = ambiguous` và `state = unknown` thay vì tự đoán màu.
 
 ## 10. Checklist kiểm tra nhanh trước khi nộp bài
 1. Tất cả đối tượng đã được vẽ ở chế độ **Shape**, không có đối tượng nào ở chế độ **Track** chưa?
