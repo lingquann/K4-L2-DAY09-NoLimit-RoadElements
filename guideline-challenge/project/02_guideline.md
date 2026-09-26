@@ -5,15 +5,21 @@ Version: v2
 Xác định và khoanh khung các đầu đèn tín hiệu giao thông đường bộ, phân loại rõ đầu đèn nào là đèn chủ đạo đang điều khiển trực tiếp hướng di chuyển của làn xe hiện tại (Ego-Vehicle Primary Traffic Light), phục vụ hệ thống xe tự hành ra quyết định dừng hay đi.
 
 ## 2. Chế độ vẽ và phạm vi đối tượng
+
 - **Chế độ vẽ trên CVAT:** Bắt buộc chọn chế độ **Shape** (vẽ độc lập trên từng frame ảnh tĩnh). **TUYỆT ĐỐI KHÔNG** dùng chế độ **Track**.
-- **PHẢI VẼ:**
-  - Mọi hộp đèn tín hiệu giao thông đường bộ dành cho xe cơ giới (đèn tròn, đèn mũi tên) quay mặt trực diện hoặc hơi chếch về phía xe mình.
-- **KHÔNG ĐƯỢC VẼ:**
-  - Đèn tín hiệu dành cho người đi bộ (có hình người), đèn dành cho xe đạp.
-  - Mặt sau của hộp đèn (đèn chiều giao cắt quay lưng lại).
-  - Đèn hậu, đèn phanh màu đỏ của các xe ô tô đi phía trước (đặc biệt trong đêm tối hoặc chụp từ xa).
-  - Bóng đèn đường chiếu sáng, đốm sáng phản quang hoặc đèn led trang trí đô thị.
-  - Hộp đèn ở quá xa hoặc quá mờ với chiều cao nhỏ hơn 10 pixels trên ảnh gốc.
+
+### PHẢI VẼ:
+- Mọi vỏ hộp đèn tín hiệu giao thông đường bộ dành cho phương tiện cơ giới (đèn bóng tròn, đèn mũi tên) thỏa mãn đồng thời 3 điều kiện:
+  1. **Góc quay (Yaw angle $\le$ 45°):** Mặt trước của hộp đèn quay trực diện hoặc quay nghiêng một góc không quá 45° so với phương nhìn thẳng của camera xe mình.
+  2. **Dấu hiệu nhận biết mặt trước:** Mắt thường phải nhìn thấy được mặt kính phẳng phía trước và phân biệt rõ ít nhất một thấu kính/vòng tròn đèn hoặc hình dáng mũi tên (dù đang phát sáng hay đang tắt).
+  3. **Ngưỡng kích thước tối thiểu:** Chiều cao của hộp đèn (đo từ mép trên cùng của vỏ/chao đèn đến đáy hộp) phải đạt **từ 10 pixels trở lên** trên ảnh gốc. Đối với đèn bị che khuất một phần, phần vỏ nhìn thấy thực tế vẫn phải đạt chiều cao tối thiểu $\ge$ 10 pixels.
+
+### KHÔNG ĐƯỢC VẼ:
+- **Đèn quay nghiêng góc lớn hoặc quay lưng:** Đèn của tuyến đường giao cắt quay ngang ($\approx$ 90°) hoặc quay lưng lại với xe mình, nơi chỉ nhìn thấy cạnh sườn kim loại màu đen hoặc lưng chao chắn nắng mà không thấy mặt kính phát sáng.
+- **Đèn tín hiệu chuyên biệt khác:** Đèn tín hiệu dành riêng cho người đi bộ (có biểu tượng hình người sang đường), đèn dành cho xe đạp.
+- **Nguồn sáng giao thông không phải đèn tín hiệu ngã tư:** Đèn hậu, đèn phanh màu đỏ của các phương tiện lưu thông phía trước; đèn đường chiếu sáng đô thị; đốm phản quang trên cọc tiêu hoặc đèn led trang trí viền đường.
+- **Bộ phận kết cấu phụ:** Không khoanh cột đỡ kim loại thẳng đứng, thanh xà ngang vươn ra lòng đường, dây cáp treo hoặc bảng biển báo phụ gắn cạnh hộp đèn (như biển mũi tên rẽ, biển cấm quay đầu).
+- **Đèn quá xa hoặc quá mờ:** Hộp đèn ở hậu cảnh có chiều cao nhỏ hơn 10 pixels hoặc chỉ là đốm sáng nhòe không xác định được cấu trúc vỏ hộp chữ nhật.
 
 ## 3. Kỹ thuật dựng hình (Geometry)
 - **Công cụ:** Sử dụng duy nhất Bounding Box (khung hình chữ nhật - Rectangle).
