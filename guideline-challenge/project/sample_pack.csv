@@ -1,1 +1,15 @@
 sample_id,split,tags,reason
+LISA01,example,normal;conflict,"Ví dụ mục 9 guideline: cần vươn 3 đầu đèn đỏ — mũi tên trái = other_direction/arrow_left, đầu giữa = ego_primary/circle_red"
+LISA02,example,edge;occlusion,Ví dụ mục 9: visible crop + phím Q cho đầu đèn bị che một phần
+LISA03,example,edge;ambiguity,Ví dụ mục 9: chọn ego_primary cho đầu đèn thẳng hàng nhất khi có nhiều đầu đèn đi thẳng
+LISA09,calibration,normal;conflict,Pha đỏ: thử rule tách mũi tên rẽ trái khỏi đèn đi thẳng
+LISA10,calibration,edge;small_far,Pha đỏ: thử ngưỡng 10 px và cách tách cụm đèn nhỏ phía xa (x≈810–845)
+LISA16,calibration,edge;temporal;low_visibility,"Frame đèn vừa đổi màu: ô đỏ còn vệt mờ, một đầu đèn xa tối hẳn → thử rule state off/unknown"
+LISA17,calibration,edge;conflict,"Pha xanh ngay sau chuyển: mũi tên trái vẫn đỏ, đầu giữa xanh → hai hiệu lệnh ngược nhau"
+LISA18,calibration,conflict;critical,Pha xanh: thử đầu đèn phải (vỏ tối lẫn tán cây) — relevance và state
+LISA21,calibration,normal;small_far,Pha xanh ổn định: kiểm đồng thuận số box và attribute
+LISA06,blind,critical,Pha đỏ: bắt buộc có box ego_primary + circle_red cho đầu đèn giữa — bỏ sót là vượt đèn đỏ
+LISA13,blind,normal,"Pha đỏ, cảnh rõ: kiểm peer vẽ đủ các đầu đèn ≥ 10 px và gán đủ attribute"
+LISA24,blind,edge;conflict,Pha xanh: mũi tên trái đỏ cạnh đèn đi thẳng xanh — peer phải giữ mũi tên là other_direction
+LISA27,blind,edge;small_far,Pha xanh: cụm đèn nhỏ phía xa — thử ngưỡng 10 px và rule tách hộp đèn
+LISA30,blind,ambiguity;small_far;occlusion,Đầu đèn nhỏ bị đầu đèn bên cạnh che một phần (x≈835–845) — thử ambiguous/unknown thay vì đoán
