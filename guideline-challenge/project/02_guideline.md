@@ -36,8 +36,6 @@ Tất cả đối tượng đều dùng chung nhãn: `traffic_light`.
 - `ego_primary`: Các đầu đèn tín hiệu chính điều khiển trực tiếp hướng di chuyển của làn xe hiện tại.
   - Theo tiêu chuẩn MUTCD (áp dụng cho bộ ảnh LISA), hướng đi thẳng tại giao lộ luôn bố trí tối thiểu 2 đầu đèn chính (thường treo trên cần vươn cao ở phía bên kia giao lộ, cách vạch dừng từ 12–55 m).
   - Mọi đầu đèn chính cùng pha quay về hướng xe mình và cùng kiểm soát làn xe đang đi đều được gán `ego_primary` (cho phép xuất hiện 2 hoặc nhiều hơn 2 đèn `ego_primary` trong cùng một ảnh, không áp dụng quy tắc "chỉ chọn 1 đèn thẳng hàng nhất").
-- `ego_secondary`: Các đầu đèn phụ trợ (supplemental signals) cùng pha và cùng kiểm soát làn xe hiện tại.
-  - Thường là các đầu đèn gắn ở trụ thấp bên đường hoặc đặt gần vạch dừng nhằm tăng khả năng quan sát khi đèn chính trên cao bị xe tải che khuất hoặc khi xe dừng quá sát giao lộ.
 - `other_direction`: Đèn dành cho các luồng di chuyển khác mà xe mình không tuân theo.
   - Bao gồm: Đèn mũi tên của làn rẽ nhánh độc lập (khi xe đang ở làn đi thẳng), đèn của chiều xe đi ngược lại, hoặc đèn của tuyến đường giao cắt ngang ngã tư.
 - `ambiguous`: Trường hợp mất vạch kẻ đường, mặt đường bị che khuất hoàn toàn, góc chụp camera quá xiên hoặc xe đang ở giữa hai luồng làn khiến annotator không thể khẳng định chắc chắn xe chịu sự điều khiển của luồng đèn nào. Tuyệt đối không đoán mò khi rơi vào trường hợp này.
@@ -81,7 +79,7 @@ Tất cả đối tượng đều dùng chung nhãn: `traffic_light`.
 - **LISA01:** Minh họa cụm đèn trên giá vươn ngang ngã tư theo chuẩn MUTCD:
   - Đèn mũi tên đỏ rẽ trái bên cạnh biển phụ: Gán `other_direction` (`state = arrow_left`).
   - Cả hai đầu đèn tròn đỏ treo trên giá vươn ngang điều khiển luồng xe đi thẳng: Đều gán `ego_primary` (`state = circle_red`).
-  - Đầu đèn tròn đỏ ở trụ thấp bên phải: Gán `ego_secondary` (`state = circle_red`) nếu cùng pha hỗ trợ cho hướng đi thẳng, hoặc gán `other_direction` nếu thuộc lối rẽ nhánh độc lập.
+  - Đầu đèn tròn đỏ ở trụ thấp bên phải: Gán `ego_primary` nếu cùng pha hỗ trợ cho hướng đi thẳng, hoặc gán `other_direction` nếu thuộc lối rẽ nhánh độc lập.
 - **LISA02:** Minh họa trường hợp đèn bị cành cây/tán cọ che khuất một phần. Chỉ khoanh phần vỏ nhìn thấy, bấm phím **Q** (`occluded = true`).
 - **LISA03:** Minh họa góc chụp camera lệch làn. Phân định các đèn thẳng hướng di chuyển hiện tại là `ego_primary`.
 - **LISA24 (Rút kinh nghiệm v3):** Minh họa pha xanh với tín hiệu xung đột: Mũi tên rẽ trái màu đỏ bên cạnh đầu đèn đi thẳng màu xanh. Bắt buộc gán mũi tên rẽ trái là `other_direction` (`state = arrow_left`) và gán đúng 1 đầu đèn giữa đi thẳng là `ego_primary` (`state = circle_green`). Khi đèn bị che lóa mờ không đủ điểm ảnh nhận diện màu, bắt buộc chọn `relevance = ambiguous` và `state = unknown` thay vì tự đoán màu.
